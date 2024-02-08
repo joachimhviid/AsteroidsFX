@@ -14,10 +14,8 @@ import static java.util.stream.Collectors.toList;
 
 
 public class PlayerControlSystem implements IEntityProcessingService {
-
     @Override
     public void process(GameData gameData, World world) {
-            
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
                 player.setRotation(player.getRotation() - 5);                
@@ -30,6 +28,13 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 double changeY = Math.sin(Math.toRadians(player.getRotation()));
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
+            }
+            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                Collection<? extends BulletSPI> bulletSPIs = getBulletSPIs();
+                for (BulletSPI bulletSPI : bulletSPIs) {
+                    Entity bullet = bulletSPI.createBullet(player, gameData);
+                    world.addEntity(bullet);
+                }
             }
             
         if (player.getX() < 0) {
