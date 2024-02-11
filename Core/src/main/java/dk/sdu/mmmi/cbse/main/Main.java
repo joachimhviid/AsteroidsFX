@@ -23,6 +23,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -46,6 +47,7 @@ public class Main extends Application {
     gameWindow.getChildren().add(text);
 
     Scene scene = new Scene(gameWindow);
+    scene.setFill(Color.BLACK);
     scene.setOnKeyPressed(event -> {
       if (event.getCode().equals(KeyCode.LEFT)) {
         gameData.getKeys().setKey(GameKeys.LEFT, true);
@@ -127,6 +129,10 @@ public class Main extends Application {
         polygons.put(entity, polygon);
         gameWindow.getChildren().add(polygon);
       }
+
+      polygon.setFill(Color.WHITE);
+      polygon.setScaleX(2);
+      polygon.setScaleY(2);
 
       polygon.setTranslateX(entity.getX());
       polygon.setTranslateY(entity.getY());
