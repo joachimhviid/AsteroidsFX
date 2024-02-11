@@ -43,11 +43,12 @@ public class Main extends Application {
   @Override
   public void start(Stage window) throws Exception {
     Text text = new Text(10, 20, "Destroyed asteroids: 0");
+    text.setFill(Color.WHITE);
     gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
     gameWindow.getChildren().add(text);
 
     Scene scene = new Scene(gameWindow);
-    scene.setFill(Color.BLACK);
+    scene.setFill(Color.rgb(0, 15, 38));
     scene.setOnKeyPressed(event -> {
       if (event.getCode().equals(KeyCode.LEFT)) {
         gameData.getKeys().setKey(GameKeys.LEFT, true);
@@ -130,7 +131,7 @@ public class Main extends Application {
         gameWindow.getChildren().add(polygon);
       }
 
-      polygon.setFill(Color.WHITE);
+      polygon.setFill(Color.valueOf(entity.getColor()));
       polygon.setScaleX(2);
       polygon.setScaleY(2);
 

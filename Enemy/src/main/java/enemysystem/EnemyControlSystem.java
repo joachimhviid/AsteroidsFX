@@ -22,12 +22,13 @@ public class EnemyControlSystem implements IEntityProcessingService {
         enemy.setRotation(enemy.getRotation() - 1);
       }
 
-      if (Math.random() > 0.9) {
-        Collection<? extends BulletSPI> bulletSPIs = getBulletSPIs();
-        for (BulletSPI bulletSPI : bulletSPIs) {
-          Entity bullet = bulletSPI.createBullet(enemy, gameData);
-          world.addEntity(bullet);
-        }
+      if (Math.random() > 0.9 && ((Enemy) enemy).canShoot(gameData.getCurrentTime())){
+        getBulletSPIs().stream().findFirst().ifPresent(
+            spi -> {
+              world.addEntity(spi.createBullet(enemy, gameData));
+              ((Enemy) enemy).setLastBulletTime(gameData.getCurrentTime());
+            }
+        );
       }
 
       // TODO: Implement enemy movement

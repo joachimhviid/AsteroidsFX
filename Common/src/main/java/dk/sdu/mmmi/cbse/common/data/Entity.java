@@ -5,52 +5,59 @@ import java.util.UUID;
 
 public class Entity implements Serializable {
 
-    private final UUID ID = UUID.randomUUID();
-    
-    private double[] polygonCoordinates;
-    private double x;
-    private double y;
-    private double rotation;
-            
+  private final UUID ID = UUID.randomUUID();
 
-    public String getID() {
-        return ID.toString();
-    }
+  private double[] polygonCoordinates;
+  private double x;
+  private double y;
+  private double rotation;
+  private String color;
+
+  public String getID() {
+    return ID.toString();
+  }
 
 
-    public void setPolygonCoordinates(double... coordinates ) {
-        this.polygonCoordinates = coordinates;
-    }
+  public void setPolygonCoordinates(double... coordinates) {
+    this.polygonCoordinates = coordinates;
+  }
 
-    public double[] getPolygonCoordinates() {
-        return polygonCoordinates;
-    }
-       
+  public double[] getPolygonCoordinates() {
+    return polygonCoordinates;
+  }
 
-    public void setX(double x) {
-        this.x =x;
-    }
 
-    public double getX() {
-        return x;
-    }
+  public void setX(double x) {
+    this.x = x;
+  }
 
-    
-    public void setY(double y) {
-        this.y = y;
-    }
+  public double getX() {
+    return x;
+  }
 
-    public double getY() {
-        return y;
-    }
 
-    public void setRotation(double rotation) {
-        this.rotation = rotation;
-    }
+  public void setY(double y) {
+    this.y = y;
+  }
 
-    public double getRotation() {
-        return rotation;
-    }
-        
+  public double getY() {
+    return y;
+  }
+
+  public void setRotation(double rotation) {
+    this.rotation = rotation;
+  }
+
+  public double getRotation() {
+    return rotation;
+  }
+
+  public String getColor() {
+    return color;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
 
 }

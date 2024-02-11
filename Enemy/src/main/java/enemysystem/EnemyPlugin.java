@@ -13,16 +13,16 @@ public class EnemyPlugin implements IGamePluginService {
 
   @Override
   public void start(GameData gameData, World world) {
-    //        enemy = createEnemyShip(gameData);
-    //        world.addEntity(enemy);
+    enemy = createEnemyShip(gameData);
+    world.addEntity(enemy);
   }
 
   private Entity createEnemyShip(GameData gameData) {
     Entity enemyShip = new Enemy();
-    enemyShip.setPolygonCoordinates(-5, -5, 10, 0, -5, 5);
-    enemyShip.setX(gameData.getDisplayHeight() / 4);
-    enemyShip.setY(gameData.getDisplayWidth() / 4);
-    // TODO: Set enemy ship color
+    enemyShip.setPolygonCoordinates(-8, -11, 13, 0, -8, 11);
+    enemyShip.setX(gameData.getDisplayHeight() / (Math.random() * 5));
+    enemyShip.setY(gameData.getDisplayWidth() / (Math.random() * 5));
+    enemyShip.setColor("TOMATO");
     return enemyShip;
   }
 
