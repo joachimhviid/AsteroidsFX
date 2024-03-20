@@ -35,6 +35,9 @@ public class Main extends Application {
   private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
   private final Pane gameWindow = new Pane();
 
+  private final Text info = new Text(10, 50, "Hello");
+  private final Text entityList = new Text(10, 80, "");
+
 
   public static void main(String[] args) {
     launch(Main.class);
@@ -46,7 +49,34 @@ public class Main extends Application {
     text.setFill(Color.WHITE);
     gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
     gameWindow.getChildren().add(text);
+    // Debug texts
+    this.info.setFill(Color.WHITE);
+    gameWindow.getChildren().add(this.info);
+    this.entityList.setFill(Color.WHITE);
+    this.entityList.setWrappingWidth(200);
+    gameWindow.getChildren().add(this.entityList);
 
+    Scene scene = getScene();
+
+    // Lookup all Game Plugins using ServiceLoader
+    for (IGamePluginService iGamePlugin : getPluginServices()) {
+      iGamePlugin.start(gameData, world);
+    }
+    for (Entity entity : world.getEntities()) {
+      Polygon polygon = new Polygon(entity.getPolygonCoordinates());
+      polygons.put(entity, polygon);
+      gameWindow.getChildren().add(polygon);
+    }
+
+    render();
+
+    window.setScene(scene);
+    window.setTitle("ASTEROIDS");
+    window.show();
+
+  }
+
+  private Scene getScene() {
     Scene scene = new Scene(gameWindow);
     scene.setFill(Color.rgb(0, 15, 38));
     scene.setOnKeyPressed(event -> {
@@ -77,23 +107,7 @@ public class Main extends Application {
         gameData.getKeys().setKey(GameKeys.SPACE, false);
       }
     });
-
-    // Lookup all Game Plugins using ServiceLoader
-    for (IGamePluginService iGamePlugin : getPluginServices()) {
-      iGamePlugin.start(gameData, world);
-    }
-    for (Entity entity : world.getEntities()) {
-      Polygon polygon = new Polygon(entity.getPolygonCoordinates());
-      polygons.put(entity, polygon);
-      gameWindow.getChildren().add(polygon);
-    }
-
-    render();
-
-    window.setScene(scene);
-    window.setTitle("ASTEROIDS");
-    window.show();
-
+    return scene;
   }
 
   private void render() {
@@ -106,6 +120,18 @@ public class Main extends Application {
         draw();
         gameData.getKeys().update();
         gameData.setCurrentTime(now);
+
+        // stop entities that are out of bounds
+//        List<Entity> entitiesToRemove = new ArrayList<>();
+//        for (Entity entity : world.getEntities()) {
+//          if (entity.getX() < 0 || entity.getX() > gameData.getDisplayWidth() || entity.getY() < 0 || entity.getY() > gameData.getDisplayHeight()) {
+//            entitiesToRemove.add(entity);
+//          }
+//        }
+//
+//        for (IGamePluginService iGamePlugin : getPluginServices()) {
+//          iGamePlugin.stop(gameData, world);
+//        }
       }
 
     }.start();
@@ -117,6 +143,12 @@ public class Main extends Application {
     for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
       entityProcessorService.process(gameData, world);
     }
+    Entity player = world.getEntityByClass("Player");
+    if (player != null) {
+      // clamp rotation between 0 and 360
+      this.info.setText("Player rotation: " + Math.floorMod(((int) player.getRotation()), 360));
+    }
+    this.entityList.setText("Entities: " + world.getEntities().toString());
     //        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
     //            postEntityProcessorService.process(gameData, world);
     //        }
@@ -149,6 +181,7 @@ public class Main extends Application {
     return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
   }
 
+  // TODO: collision detection
   private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
     return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
   }
